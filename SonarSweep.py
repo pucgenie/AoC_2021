@@ -28,27 +28,15 @@ def count_increases(levels: Iterable) -> int:
 			raise ValueError(f"Unexpectedly skipped more than the first line, n={count_skipped}")
 		return count_increased
 
-def print_outcome(**kwargs):
-	"""
-	Prints YAML-style structured single-level output.
-	"""
-	for key in kwargs:
-		print(f"""{key}: {kwargs[key]}""")
-
-def do_it(provider: Iterable,):
-	print_outcome(count_increased=count_increases(provider))
 
 
 if __name__ == '__main__':
-	import argparse
-	parser = argparse.ArgumentParser(description="Advent of Code 2021, #1 Sonar Sweep")
-	parser.add_argument('--session', type=str, metavar="cookie", help="Session cookie to use when gathering input data. If omitted, example values are used.")
-	args = parser.parse_args()
-	
-	count_increased = None
-	if not args.session:
-		print("mode: test")
-		do_it([
+	from stdout_tools import *
+	from linebased_main import linebased_main
+	linebased_main(
+		"#1 Sonar Sweep",
+		lambda provider : print_outcome(count_increased=count_increases(provider)),
+		example_data=[
 			199,
 			200,
 			208,
@@ -59,13 +47,7 @@ if __name__ == '__main__':
 			269,
 			260,
 			263,
-		])
-		exit(16)
-		raise BaseException("It's the end of the universe.")
-	# https://docs.python.org/3/library/urllib.request.html recommends requests module instead, so...
-	import requests
-	with requests.get('https://adventofcode.com/2021/day/1/input', timeout=5, cookies={'session': args.session,}) as content:
-		do_it(
-			map(parse_sane_int_lines, content.text.splitlines())
-		)
-	#count_increased = fetch_and_process_data(count_increases)
+		],
+		data_url='https://adventofcode.com/2021/day/1/input',
+		data_parser=parse_sane_int_lines,
+	)
