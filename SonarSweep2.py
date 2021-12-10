@@ -39,7 +39,6 @@ def count_increases(levels: Iterable, window_size: int,) -> int:
 
 if __name__ == '__main__':
 	from stdout_tools import *
-	window_size = 3
 	def argparse_extras(parser):
 		parser.add_argument('--window_size', type=int, default=3, help="""Sliding window size. 1 would allow calculating part 1.""",)
 	def do_it(provider, args,):
