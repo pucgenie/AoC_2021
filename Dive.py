@@ -4,19 +4,36 @@ Created on 09.12.2021
 @author: pucgenie+aoc212@gmail.com
 '''
 from typing import Iterable
-from enum import Enum
+from enum import Enum, auto
 
-submarine = {
-	's': 0,
-	'd': 0,
-}
-
-# should use namedtuple?
-class Axis(Enum):
-	forward = ('s', +1)
-	down = ('d', +1)
-	up = ('d', -1)
+class Submarine(object):
+	def __init__(self):
+		self.depth = 0
+		self.aim = 0
+		self.horizontal_position = 0
 	
+	def down(self, units,):
+		self.aim += units
+	
+	def up(self, units,):
+		self.aim -= units
+	
+	def forward(self, units,):
+		self.horizontal_position += units
+		self.depth += self.aim * units
+	
+	def move_submarine_path(self,
+			commands: Iterable,
+			# nothing special
+		) -> int:
+		for command in commands:
+			# guarded by Enum validation
+			getattr(self, command[0].name)(command[1])
+
+class Axis(Enum):
+	forward = auto()
+	down = auto()
+	up = auto()
 
 def parse_sane_command_lines(line):
 	if len(line) > 32:
@@ -29,14 +46,6 @@ def parse_sane_command_lines(line):
 		raise ValueError("Too many tokens, aborting.")
 	return (Axis[line[0]], int(line[1]),)
 
-def move_submarine_path(
-		commands: Iterable,
-		# nothing special
-	) -> int:
-	for command in commands:
-		submarine[command[0].value[0]] += command[0].value[1] * command[1]
-	return submarine['s'] * submarine['d']
-
 
 
 if __name__ == '__main__':
@@ -44,13 +53,15 @@ if __name__ == '__main__':
 	def argparse_extras(parser):
 		pass #parser.add_argument('--window_size', type=int, default=3, help="""Sliding window size. 1 would allow calculating part 1.""",)
 	def do_it(provider, args,):
-		print_outcome(vector=move_submarine_path(
+		submarine = Submarine()
+		submarine.move_submarine_path(
 			provider,
 			# nothing special
-		))
+		)
+		print_outcome(vector=submarine.horizontal_position * submarine.depth)
 	from linebased_main import linebased_main
 	linebased_main(
-		"#2 Dive part 1",
+		"#2 Dive part 2",
 		do_it,
 		example_data=[
 			(Axis.forward, 5,),
