@@ -4,7 +4,7 @@ Created on 09.12.2021
 @author: pucgenie+aoc212@gmail.com
 '''
 
-def linebased_main(puzzle_name, do_it, example_data=None, data_parser=None, data_url=None, argparse_extras=None,):
+def linebased_main(puzzle_name, do_it, example_data=None, data_parser=None, data_url=None, argparse_extras=None, parse_example_data=False,):
 	import argparse
 	parser = argparse.ArgumentParser(description=f"Advent of Code 2021, {puzzle_name}", formatter_class=argparse.ArgumentDefaultsHelpFormatter,)
 	parser.add_argument('--session', type=str, metavar="cookie", help="Session cookie to use when gathering input data. If omitted, example values are used.")
@@ -14,7 +14,10 @@ def linebased_main(puzzle_name, do_it, example_data=None, data_parser=None, data
 	
 	if not args.session:
 		print("mode: test")
-		do_it(example_data, args=args,)
+		do_it(
+			map(data_parser, example_data,) if parse_example_data else example_data,
+			args=args,
+		)
 		exit(16)
 		raise BaseException("It's the end of the universe.")
 	# https://docs.python.org/3/library/urllib.request.html recommends requests module instead, so...
