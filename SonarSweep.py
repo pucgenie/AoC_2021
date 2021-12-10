@@ -13,20 +13,20 @@ def parse_sane_int_lines(line):
 	return int(line)
 
 def count_increases(levels: Iterable) -> int:
-		current_level = None
-		count_increased = 0
-		count_skipped = 0
-		for read_level in levels:
-			try:
-				if read_level > current_level:
-					count_increased += 1
-			except TypeError as e:
-				# at first it is impossible to compare
-				count_skipped += 1
-			current_level = read_level
-		if count_skipped > 1:
-			raise ValueError(f"Unexpectedly skipped more than the first line, n={count_skipped}")
-		return count_increased
+	current_level = None
+	count_increased = 0
+	count_skipped = 0
+	for read_level in levels:
+		try:
+			if read_level > current_level:
+				count_increased += 1
+		except TypeError as e:
+			# at first it is impossible to compare
+			count_skipped += 1
+		current_level = read_level
+	if count_skipped > 1:
+		raise ValueError(f"Unexpectedly skipped more than the first line, n={count_skipped}")
+	return count_increased
 
 
 
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 	from linebased_main import linebased_main
 	linebased_main(
 		"#1 Sonar Sweep",
-		lambda provider : print_outcome(count_increased=count_increases(provider)),
+		lambda provider, **kwargs : print_outcome(count_increased=count_increases(provider)),
 		example_data=[
 			199,
 			200,
