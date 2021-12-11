@@ -8,7 +8,6 @@ def_rows = 5
 def_cols = 5
 f_newline = "\n"
 
-from os import linesep
 class Board(object):
 	def __init__(self, lines,):
 		if len(lines) != def_rows:
@@ -34,7 +33,7 @@ class Board(object):
 				return True
 		for colIdx, column in enumerate(zip(*self.markmap)):
 			if all(column):
-				print(f"Bingo, column {colIdx}, {column}")
+				print(f"Bingo, column {colIdx}")
 				return True
 		return False
 	
@@ -63,16 +62,13 @@ class Bingo(BaseException):
 		return f"Bingo-Boards:\n{f_newline.join((f'{board.calc_score() * self.win_num}{f_newline}{str(board)}{f_newline}' for board in self.winners))}"
 
 if __name__ == '__main__':
-	from stdout_tools import *
-	def argparse_extras(parser):
-		pass #parser.add_argument('--window_size', type=int, default=3, help="""Sliding window size. 1 would allow calculating part 1.""",)
 	def do_it(provider, args,):
 		data_iter = iter(provider)
 		header = [int(z, 10,) for z in next(data_iter).split(',')]
 		
 		def parse_board(data_iter,):
 			lines = []
-			for i in range(def_rows):
+			for _ in range(def_rows):
 				lines.append([int(z, 10,) for z in next(data_iter).split()])
 			return Board(lines)
 		
@@ -108,7 +104,7 @@ if __name__ == '__main__':
 		do_it,
 		example_data=[
 			'7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1',
-      '',
+			'',
 			'22 13 17 11  0',
 			' 8  2 23  4 24',
 			'21  9 14 16  7',
@@ -128,6 +124,4 @@ if __name__ == '__main__':
 			' 2  0 12  3  7',
 		],
 		data_url='https://adventofcode.com/2021/day/4/input',
-		argparse_extras=argparse_extras,
-		parse_example_data=True,
 	)
