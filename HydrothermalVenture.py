@@ -27,18 +27,44 @@ class Line(object):
 		#Line.check_window_size(a, b,)
 	
 	def draw_onto(self, bitmap,):
-		linex = [self.a[0], self.b[0],]
-		linex.sort()
-		ax, bx = linex
-		del linex
-		liney = [self.a[1], self.b[1],]
-		liney.sort()
-		ay, by = liney
-		del liney
+		"""
+		Doesn't work for all angles, but 45° steps are ok.
+		"""
+		x_distance = self.b[0] - self.a[0]
+		y_distance = self.b[1] - self.a[1]
+		x_direction = 1 if x_distance > 0 else 0 if x_distance == 0 else -1
+		y_direction = 1 if y_distance > 0 else 0 if y_distance == 0 else -1
 		
-		for x in range(ax, bx + Line.STROKE,):
-			for y in range(ay, by + Line.STROKE,):
-				bitmap[x][y] += 1
+		x = self.a[0]
+		y = self.a[1]
+		
+		if x_direction != 0:
+			x_end = self.b[0] + Line.STROKE * (1 if x_direction >= 0 else -1)
+			x_step, x_i = (x_distance * x_direction) / (y_distance * y_direction) if y_distance != 0 else -1, 0
+			while x != x_end:
+				# swap x and y for simpler console output
+				bitmap[y][x] += 1
+				x += x_direction
+				x_i += 1
+				# buggy int-float comparison
+				if x_i == x_step:
+					y += y_direction
+					x_i = 0
+		elif y_direction != 0:
+			y_end = self.b[1] + Line.STROKE * (1 if y_direction >= 0 else -1)
+			y_step, y_i = (y_distance * y_direction) / (x_distance * x_direction) if x_distance != 0 else -1, 0
+			while y != y_end:
+				# swap x and y for simpler console output
+				bitmap[y][x] += 1
+				y += y_direction
+				y_i += 1
+				# buggy int-float comparison
+				if y_i == y_step:
+					x += x_direction
+					y_i = 0
+		else:
+			# supports "dots"
+			bitmap[y][x] += 1
 
 def parse_sane_lines(line):
 	if len(line) > 18:
@@ -52,7 +78,7 @@ def parse_sane_lines(line):
 if __name__ == '__main__':
 	def do_it(data_in, args,):
 		# part 1 restriction. Could use filter but genexps look more pythonic.
-		data_in = (line for line in data_in if (line.a[0] == line.b[0]) or (line.a[1] == line.b[1]))
+		#data_in = (line for line in data_in if (line.a[0] == line.b[0]) or (line.a[1] == line.b[1]))
 		
 		# check all intersections or use a bitmap? If in doubt, STREAM: bitmap.
 		# dynamically grow it?
