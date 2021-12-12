@@ -3,7 +3,8 @@ Created on 12.12.2021
 
 @author: pucgenie+aoc212@gmail.com
 '''
-from _collections import deque
+from collections import Counter
+
 def int_positive(n):
 	if n == '0':
 		raise ValueError("Unexpected input")
@@ -15,23 +16,27 @@ if __name__ == '__main__':
 		del args
 		
 		born_at_day = [0] * days
-		successors = deque()
+		successors = Counter()
 		for z in fish:
 			# On the first day there were born some fish that were almost able to give birth again
 			born_at_day[0] += 1
-			for future_day in range(z, days, 7,):
-				born_at_day[future_day] += 1
-				successors.append(future_day)
+			successors[z] += 1
+		
+		def fish_thread(startday, n_fish,):
+			for future_day in range(startday, days, 7,):
+				born_at_day[future_day] += n_fish
+				successors[future_day + 9] += n_fish
+		
 		while successors:
-			print(len(successors))
-			for future_day in range(successors.pop() + 9, days, 7,):
-				born_at_day[future_day] += 1
-				successors.append(future_day)
+			swarms = list(successors.items())
+			successors.clear()
+			for day, n_fish, in swarms:
+				fish_thread(day, n_fish,)
 		
 		from stdout_tools import print_outcome
 		print_outcome(
 			count=sum(born_at_day),
-			#bitmap=bitmap,
+			#successors=successors,
 		)
 	
 	from linebased_main import linebased_main
