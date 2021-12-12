@@ -3,7 +3,7 @@ Created on 12.12.2021
 
 @author: pucgenie+aoc212@gmail.com
 '''
-from statistics import mean
+from statistics import mean, median
 
 def int_natural(n):
 	if n[0] == '-':
@@ -24,7 +24,10 @@ if __name__ == '__main__':
 		from stdout_tools import print_outcome
 		print_outcome(
 			ideal_depth=ideal_depth,
+			perfect_depth=median(crab_depths),
 			fuel_consumpt=fuel_consumpt,
+			fuel_up= sum(n*(n+1)/2 for n in (abs(ideal_depth+1 - cd) for cd in crab_depths)),
+			fuel_down= sum(n*(n+1)/2 for n in (abs(ideal_depth-1 - cd) for cd in crab_depths)),
 			full_cpu=process_time_ns() - full_cpu,
 		)
 	
