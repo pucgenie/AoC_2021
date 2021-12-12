@@ -46,8 +46,7 @@ class Line(object):
 				bitmap[y][x] += 1
 				x += x_direction
 				x_i += 1
-				# buggy int-float comparison
-				if x_i == x_step:
+				if x_i >= x_step:
 					y += y_direction
 					x_i = 0
 		elif y_direction != 0:
@@ -58,8 +57,7 @@ class Line(object):
 				bitmap[y][x] += 1
 				y += y_direction
 				y_i += 1
-				# buggy int-float comparison
-				if y_i == y_step:
+				if y_i >= y_step:
 					x += x_direction
 					y_i = 0
 		else:
