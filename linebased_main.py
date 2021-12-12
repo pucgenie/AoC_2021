@@ -12,7 +12,7 @@ def apply_filters(data_filter, data_parser, content_lines,):
 
 def linebased_main(puzzle_name, do_it, example_data=None,
 		data_filter=None, data_parser=None, data_url=None, parse_example_data=False,
-		argparse_extras=None,
+		argparse_extras=None, split_char=None,
 	):
 	import argparse
 	parser = argparse.ArgumentParser(description=f"Advent of Code 2021, {puzzle_name}", formatter_class=argparse.ArgumentDefaultsHelpFormatter,)
@@ -35,7 +35,7 @@ def linebased_main(puzzle_name, do_it, example_data=None,
 	# https://docs.python.org/3/library/urllib.request.html recommends requests module instead, so...
 	import requests
 	with requests.get(data_url, timeout=5, cookies={'session': args.session,}) as content:
-		content_lines = apply_filters(data_filter, data_parser, content.text.splitlines(),)
+		content_lines = apply_filters(data_filter, data_parser, content.text.split(split_char) if split_char else content.text.splitlines(),)
 		do_it(
 			content_lines,
 			args=args,
