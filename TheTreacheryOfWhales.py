@@ -3,7 +3,8 @@ Created on 12.12.2021
 
 @author: pucgenie+aoc212@gmail.com
 '''
-from statistics import mean, median
+from statistics import mean
+from math import floor, ceil
 
 def int_natural(n):
 	if n[0] == '-':
@@ -18,16 +19,27 @@ if __name__ == '__main__':
 		from time import process_time_ns
 		full_cpu = process_time_ns()
 		
-		ideal_depth = round(mean(crab_depths))
-		fuel_consumpt = sum(n*(n+1)/2 for n in (abs(ideal_depth - cd) for cd in crab_depths))
+		ideal_depth = min(crab_depths)
+		perfect_depth = mean(crab_depths)
+		
+		def fuel_consumpt(depth):
+			return sum(n*(n+1)/2 for n in (abs(depth - cd) for cd in crab_depths))
+		
+		min_fuel_consumption = fuel_consumpt(ideal_depth)
+		for depth in range(ideal_depth + 1, max(crab_depths) + 1):
+			test_fuel = fuel_consumpt(depth)
+			if test_fuel < min_fuel_consumption:
+				min_fuel_consumption = test_fuel
+				ideal_depth = depth
 		
 		from stdout_tools import print_outcome
 		print_outcome(
 			ideal_depth=ideal_depth,
-			perfect_depth=median(crab_depths),
-			fuel_consumpt=fuel_consumpt,
-			fuel_up= sum(n*(n+1)/2 for n in (abs(ideal_depth+1 - cd) for cd in crab_depths)),
-			fuel_down= sum(n*(n+1)/2 for n in (abs(ideal_depth-1 - cd) for cd in crab_depths)),
+			perfect_depth=perfect_depth,
+			fuel_consumpt=min_fuel_consumption,
+			perfect_fuel_consumpt=fuel_consumpt(perfect_depth),
+			fuel_floor= fuel_consumpt(floor(perfect_depth)),
+			fuel_ceil= fuel_consumpt(ceil(perfect_depth)),
 			full_cpu=process_time_ns() - full_cpu,
 		)
 	
